@@ -56,7 +56,7 @@ class MongoAPI:
 if __name__ == '__main__':
     mdb = MongoAPI("movies", "posters")
     download_agent = TMDB_Downloader.TMDBDownloader()
-    moviename = "Harry Potter"
+    moviename = "Avengers"
     movieid, file_name, byte_arr = download_agent.download_poster(moviename)
     mdb.write_image(file_name, moviename, movieid, byte_arr)
     mdb.read_image(moviename)
