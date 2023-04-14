@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import gridfs
 import logging as log
+import os
 import TMDB_Downloader
 
 
@@ -22,14 +23,18 @@ class MongoAPI:
         return output
 
     def read_image(self, movie_name):
-        f_id = self.db.posters.files.find_one({"movie_name": movie_name}, {"_id": 1})
+        f_id = self.db[self.collection + ".files"].find_one({"movie_name": movie_name}, {"_id": 1})
         byte_arr = self.fs.get(f_id['_id']).read()
-        with open(movie_name + ".jpeg", 'wb') as w:
+        path = "./posters_images/"
+        isExist = os.path.exists(path)
+        if not isExist:
+            os.mkdir("./posters_images/")
+        with open(path + movie_name + ".jpeg", 'wb') as w:
             w.write(byte_arr)
         return f_id
 
     def get_file_id_by_name(self, movie_name):
-        return self.db.posters.files.find_one({"movie_name": movie_name}, {"_id": 1})
+        return self.db[self.collection + ".files"].find_one({"movie_name": movie_name}, {"_id": 1})
 
     def del_image(self, movie_name):
         log.info('Deleting Data')
@@ -40,7 +45,7 @@ class MongoAPI:
 
     def update_image_file_meta_data(self, movie_name, key_to_update, val_to_update):
         f_id = self.get_file_id_by_name((movie_name))
-        mycol = self.db["posters.files"]
+        mycol = self.db[self.collection + ".files"]
         myquery = {"_id": f_id}
         new_values = {"$set": {key_to_update: val_to_update}}
         db_update_response = mycol.update_one(myquery, new_values)
