@@ -13,5 +13,6 @@ sudo git clone https://github.com/AmirKatorza/AWS_reStart_Docker-Flask-Mongo_App
 #sudo yum install unzip -y
 #sudo unzip master.zip
 sudo cd ./AWS_reStart_Docker-Flask-Mongo_App/
+sudo echo "API_KEY_V3 = '<api_key>'" >> credentials.py
 sudo docker-compose build
 sudo docker-compose up
