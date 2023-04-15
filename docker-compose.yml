@@ -1,12 +1,13 @@
-web:
-  build: .
-  command: python -u app.py
-  ports:
-    - "5000:5000"
-  volumes:
-    - .:/movies_poster_db
-  links:
-    - db
+version: "3"
+services:
+    mongo_db:
+        image: "mongo"
+        ports:
+          - "27017:27017"
 
-db:
-  image: mongo latest
+    posters_app:
+        build: .
+        depends_on:
+            - mongo_db
+        ports:
+            - "5001:5001"

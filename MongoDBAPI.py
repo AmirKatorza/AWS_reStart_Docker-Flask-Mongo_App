@@ -38,13 +38,13 @@ class MongoAPI:
 
     def del_image(self, movie_name):
         log.info('Deleting Data')
-        f_id = self.get_file_id_by_name((movie_name))
+        f_id = self.get_file_id_by_name(movie_name)
         self.fs.delete(f_id)
         output = {'Status': 'Successfully Deleted' if f_id else "Nothing was Deleted."}
         return output
 
     def update_image_file_meta_data(self, movie_name, key_to_update, val_to_update):
-        f_id = self.get_file_id_by_name((movie_name))
+        f_id = self.get_file_id_by_name(movie_name)
         mycol = self.db[self.collection + ".files"]
         myquery = {"_id": f_id}
         new_values = {"$set": {key_to_update: val_to_update}}
