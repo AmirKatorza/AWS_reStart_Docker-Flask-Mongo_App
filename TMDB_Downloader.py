@@ -32,6 +32,7 @@ class TMDBDownloader:
             poster_path = self._get_poster_url(movie_id)
         except Exception as e:
             print(f"Could not find movie - {movie_name} - {movie_id}")
+            return 0, None, 0
         else:
             url = self.base_url + self.poster_size + poster_path
             r = requests.get(url)

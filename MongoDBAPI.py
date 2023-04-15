@@ -18,19 +18,19 @@ class MongoAPI:
     def write_image(self, file_name, movie_name, imdb_id, byte_arr):
         log.info('Writing Data')
         fs_id = self.fs.put(byte_arr, movie_name=movie_name, imdb_id=imdb_id, filename=file_name)
-        output = {'Status': 'Successfully Inserted',
-                  'Document_ID': str(fs_id)}
+        output = {'_id': fs_id, 'Status': 'Successfully Inserted'}
         return output
 
     def read_image(self, movie_name):
         f_id = self.db[self.collection + ".files"].find_one({"movie_name": movie_name}, {"_id": 1})
-        byte_arr = self.fs.get(f_id['_id']).read()
-        path = "./posters_images/"
-        isExist = os.path.exists(path)
-        if not isExist:
-            os.mkdir("./posters_images/")
-        with open(path + movie_name + ".jpeg", 'wb') as w:
-            w.write(byte_arr)
+        if f_id is not None:
+            byte_arr = self.fs.get(f_id['_id']).read()
+            path = "./posters_images/"
+            is_exist = os.path.exists(path)
+            if not is_exist:
+                os.mkdir("./posters_images/")
+            with open(path + movie_name + ".jpeg", 'wb') as w:
+                w.write(byte_arr)
         return f_id
 
     def get_file_id_by_name(self, movie_name):
@@ -55,8 +55,9 @@ class MongoAPI:
 
 if __name__ == '__main__':
     mdb = MongoAPI("movies", "posters")
-    download_agent = TMDB_Downloader.TMDBDownloader()
-    moviename = "Avengers"
-    movieid, file_name, byte_arr = download_agent.download_poster(moviename)
-    mdb.write_image(file_name, moviename, movieid, byte_arr)
-    mdb.read_image(moviename)
+    # download_agent = TMDB_Downloader.TMDBDownloader()
+    moviename = "Batman"
+    # movieid, file_name, byte_arr = download_agent.download_poster(moviename)
+    # mdb.write_image(file_name, moviename, movieid, byte_arr)
+    r = mdb.read_image(moviename)
+    print(r)
